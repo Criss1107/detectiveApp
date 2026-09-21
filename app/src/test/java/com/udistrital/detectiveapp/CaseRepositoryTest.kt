@@ -42,7 +42,7 @@ class CaseRepositoryTest {
 
         val caso1 = Case(1, "Caso 1", "Secuestraron a joven", "10/09/2026", "Abierto", "Sus pertenencias", emptyList(), "Pendiente")
         repository.createCase(caso1)
-
+        println("ID generado después de crear caso: ${repository.getNextId()}")
         assertEquals(2, repository.getNextId())
     }
 
@@ -63,6 +63,8 @@ class CaseRepositoryTest {
         repository.createCase(newCase)
         val savedCase = repository.getCaseById(1)
 
+        println("Caso recuperado de la base de datos: ${savedCase?.titulo}")
+        println("Uri de evidencia guardada: ${savedCase?.evidencias?.get(0)?.fotoUri}")
         assertNotNull(savedCase)
         assertEquals("Robo en el museo", savedCase?.titulo)
         assertEquals("content://media/foto1", savedCase?.evidencias?.get(0)?.fotoUri)
