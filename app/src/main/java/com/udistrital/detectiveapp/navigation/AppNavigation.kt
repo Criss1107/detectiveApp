@@ -1,26 +1,29 @@
 package com.udistrital.detectiveapp.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.udistrital.detectiveapp.NavArgs
-import com.udistrital.detectiveapp.screens.CaseDetailScreen
+import com.udistrital.detectiveapp.repository.CaseRepository
 import com.udistrital.detectiveapp.screens.CaseListScreen
 import com.udistrital.detectiveapp.screens.CreateCaseScreen
 import com.udistrital.detectiveapp.screens.DeleteCaseScreen
 import com.udistrital.detectiveapp.screens.EditCaseScreen
 import com.udistrital.detectiveapp.screens.HomeScreen
-import android.app.Activity
-import androidx.compose.ui.platform.LocalContext
-
+import com.udistrital.detectiveapp.ui.CaseDetailScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     val context = LocalContext.current
+    val repository = remember { CaseRepository(context) }
+
     NavHost(
         navController = navController,
         startDestination = Routes.HOME
@@ -54,10 +57,13 @@ fun AppNavigation() {
             )
         }
 
-        // Pantallas de Persona 2 (cascarones con navegación conectada)
         composable(Routes.CREATE_CASE) {
             CreateCaseScreen(
-                onBack = { navController.popBackStack() }
+                onSaveClick = { newCase ->
+                    repository.createCase(newCase)
+                    navController.popBackStack()
+                },
+                onBackClick = { navController.popBackStack() }
             )
         }
 
@@ -66,11 +72,15 @@ fun AppNavigation() {
             arguments = listOf(navArgument(NavArgs.CASE_ID) { type = NavType.IntType })
         ) { entry ->
             val id = entry.arguments?.getInt(NavArgs.CASE_ID) ?: -1
-            CaseDetailScreen(
-                caseId = id,
-                onBack = { navController.popBackStack() },
-                onEdit = { navController.navigate(Routes.editCase(id)) }
-            )
+            val case = remember(id) { repository.getCaseById(id) }
+            if (case != null) {
+                CaseDetailScreen(
+                    case = case,
+                    onBack = { navController.popBackStack() }
+                )
+            } else {
+                navController.popBackStack()
+            }
         }
 
         composable(

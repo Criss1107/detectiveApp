@@ -1,4 +1,4 @@
-package com.udistrital.detectiveapp.ui.case
+package com.udistrital.detectiveapp.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

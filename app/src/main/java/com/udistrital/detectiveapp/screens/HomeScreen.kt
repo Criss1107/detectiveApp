@@ -1,5 +1,6 @@
 package com.udistrital.detectiveapp.screens
 
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -127,3 +128,9 @@ private fun SummaryCard(title: String, value: Int, modifier: Modifier = Modifier
         }
     }
 }
+    @Preview(showBackground = true)
+    @Composable
+    fun HomeScreenPreview() {
+        HomeScreen(onViewCases = {}, onNewCase = {}, onExit = {})
+    }
+
