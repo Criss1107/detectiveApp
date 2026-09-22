@@ -9,4 +9,5 @@ data class Case (
     val hallazgos: String,
     val evidencias:List<Evidence>,
     val estadoCierre: String
+
 )
