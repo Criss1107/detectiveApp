@@ -1,5 +1,6 @@
 package com.udistrital.detectiveapp.ui
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -10,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.udistrital.detectiveapp.model.Case
 import com.udistrital.detectiveapp.model.CasesDemo
 import com.udistrital.detectiveapp.model.Evidence
@@ -150,7 +153,15 @@ private fun EvidenceCard(evidence: Evidence) {
         // if it has a photo or image show it, but if its not the case then show just a small general icon
         if (!evidence.fotoUri.isNullOrBlank()) {
             Spacer(modifier = Modifier.height(8.dp))
-            Text("Photo attached", color = SecondaryText, fontSize = 12.sp)
+            AsyncImage(
+                model = Uri.parse(evidence.fotoUri),
+                contentDescription = evidence.descripcion,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .clip(RoundedCornerShape(10.dp))
+            )
         }
     }
 }

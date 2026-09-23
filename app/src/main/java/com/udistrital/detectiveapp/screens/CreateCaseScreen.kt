@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,10 +21,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.udistrital.detectiveapp.model.Case
+import com.udistrital.detectiveapp.model.Evidence
 
 private val MainBlue = Color(0xFF2563EB)
 private val LightBackground = Color(0xFFF7F8FA)
@@ -43,10 +47,15 @@ fun CreateCaseScreen(
     var estadoExpanded by remember { mutableStateOf(false) }
     var estadoSeleccionado by remember { mutableStateOf(estados.first()) }
 
+    // Evidencias que se van agregando antes de guardar el caso.
+    val evidencias = remember { mutableStateListOf<Evidence>() }
+    var nextEvidenceId by remember { mutableStateOf(1) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
+            .padding(20.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Text(
@@ -115,6 +124,17 @@ fun CreateCaseScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        EvidenceEditorSection(
+            evidences = evidencias,
+            nextEvidenceId = {
+                val id = nextEvidenceId
+                nextEvidenceId += 1
+                id
+            },
+            onEvidenceAdded = { evidencias.add(it) },
+            onEvidenceRemoved = { evidencias.remove(it) }
+        )
+
         Button(
             onClick = {
                 val newCase = Case(
@@ -124,7 +144,7 @@ fun CreateCaseScreen(
                     fecha = fecha,
                     estado = estadoSeleccionado,
                     hallazgos = hallazgos,
-                    evidencias = emptyList(),
+                    evidencias = evidencias.toList(),
                     estadoCierre = "Pending"
                 )
                 onSaveClick(newCase)
