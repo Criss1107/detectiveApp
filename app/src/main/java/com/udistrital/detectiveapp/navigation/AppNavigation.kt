@@ -48,7 +48,7 @@ fun AppNavigation() {
         composable(Routes.CREATE_CASE) {
             CreateCaseScreen(
                 onSaveClick = { newCase ->
-                    repository.createCase(newCase)
+                    repository.createCase(newCase.copy(id = repository.getNextId()))
                     navController.popBackStack()
                 },
                 onBackClick = { navController.popBackStack() }
