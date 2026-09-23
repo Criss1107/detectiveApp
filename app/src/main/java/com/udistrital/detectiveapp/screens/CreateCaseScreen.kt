@@ -24,11 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.udistrital.detectiveapp.model.Case
 import com.udistrital.detectiveapp.model.Evidence
-import com.udistrital.detectiveapp.repository.CaseRepository
 
 private val MainBlue = Color(0xFF2563EB)
 private val LightBackground = Color(0xFFF7F8FA)
@@ -44,9 +42,6 @@ fun CreateCaseScreen(
     var descripcion by remember { mutableStateOf("") }
     var fecha by remember { mutableStateOf("") }
     var hallazgos by remember { mutableStateOf("") }
-
-    val context = LocalContext.current
-    val repository = remember { CaseRepository(context) }
 
     val estados = listOf("Open", "In progress", "Closed")
     var estadoExpanded by remember { mutableStateOf(false) }
@@ -121,6 +116,13 @@ fun CreateCaseScreen(
             }
         }
 
+        OutlinedTextField(
+            value = hallazgos,
+            onValueChange = { hallazgos = it },
+            label = { Text("Findings (optional)") },
+            minLines = 2,
+            modifier = Modifier.fillMaxWidth()
+        )
 
         EvidenceEditorSection(
             evidences = evidencias,
@@ -136,7 +138,7 @@ fun CreateCaseScreen(
         Button(
             onClick = {
                 val newCase = Case(
-                    id = repository.getNextId(),
+                    id = 0,
                     titulo = titulo,
                     descripcion = descripcion,
                     fecha = fecha,
