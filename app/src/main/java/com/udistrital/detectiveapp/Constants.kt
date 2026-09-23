@@ -1,7 +1,6 @@
 package com.udistrital.detectiveapp
 
-// Valores globales que se usan en más de un archivo.
-// Si un valor se repite en varios lugares, va aquí.
+
 
 object CaseStatus {
     const val OPEN = "Abierto"
@@ -9,6 +8,13 @@ object CaseStatus {
     const val CLOSED = "Cerrado"
 
     val ALL = listOf(OPEN, INVESTIGATING, CLOSED)
+
+    fun normalize(raw: String): String = when (raw.trim().lowercase()) {
+        "open", "abierto" -> OPEN
+        "in progress", "en progreso", "en proceso", "en investigación", "en investigacion" -> INVESTIGATING
+        "closed", "cerrado" -> CLOSED
+        else -> raw.trim()
+    }
 }
 
 object NavArgs {

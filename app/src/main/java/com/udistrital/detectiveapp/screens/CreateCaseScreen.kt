@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.udistrital.detectiveapp.CaseStatus
 import com.udistrital.detectiveapp.model.Case
 import com.udistrital.detectiveapp.model.Evidence
 
@@ -43,11 +44,10 @@ fun CreateCaseScreen(
     var fecha by remember { mutableStateOf("") }
     var hallazgos by remember { mutableStateOf("") }
 
-    val estados = listOf("Open", "In progress", "Closed")
+    val estados = CaseStatus.ALL
     var estadoExpanded by remember { mutableStateOf(false) }
     var estadoSeleccionado by remember { mutableStateOf(estados.first()) }
 
-    // Evidencias que se van agregando antes de guardar el caso.
     val evidencias = remember { mutableStateListOf<Evidence>() }
     var nextEvidenceId by remember { mutableStateOf(1) }
 

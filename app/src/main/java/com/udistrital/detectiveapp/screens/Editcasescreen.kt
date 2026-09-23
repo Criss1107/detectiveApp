@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.udistrital.detectiveapp.CaseStatus
 import com.udistrital.detectiveapp.model.Case
 import com.udistrital.detectiveapp.repository.CaseRepository
 
@@ -28,7 +29,6 @@ fun EditCaseScreen(
     onBack: () -> Unit,
     onSaved: (Case) -> Unit = {}
 ) {
-    // CaseRepository necesita un Context para construirse por eso lo llamo aquí con LocalContext.current en vez de como si fuera un singleton.
     val context = LocalContext.current
     val caseRepository = remember { CaseRepository(context) }
 
@@ -54,9 +54,9 @@ fun EditCaseScreen(
     var hallazgos by remember { mutableStateOf(originalCase.hallazgos) }
     var estadoCierre by remember { mutableStateOf(originalCase.estadoCierre) }
 
-    val estados = listOf("Open", "In progress", "Closed")
+    val estados = CaseStatus.ALL
     var estadoExpanded by remember { mutableStateOf(false) }
-    var estadoSeleccionado by remember { mutableStateOf(originalCase.estado) }
+    var estadoSeleccionado by remember { mutableStateOf(CaseStatus.normalize(originalCase.estado)) }
 
     Scaffold(
         containerColor = DarkBackground,

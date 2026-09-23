@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -75,27 +76,39 @@ fun EvidenceEditorSection(
                     .height(140.dp)
                     .clip(RoundedCornerShape(10.dp))
             )
+            Text(
+                "Presiona \"Add evidence\" para que la foto quede guardada en el caso.",
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
         Button(
             onClick = {
-                onEvidenceAdded(Evidence(nextEvidenceId(), descripcion, fotoUri))
+                onEvidenceAdded(Evidence(nextEvidenceId(), descripcion.ifBlank { "Sin descripción" }, fotoUri))
                 descripcion = ""
                 fotoUri = null
             },
-            enabled = descripcion.isNotBlank(),
+            enabled = descripcion.isNotBlank() || fotoUri != null,
             modifier = Modifier.fillMaxWidth()
         ) { Text("Add evidence") }
 
         evidences.forEach { ev ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text(
-                    ev.descripcion + if (ev.fotoUri != null) " 📷" else "",
-                    modifier = Modifier.weight(1f)
-                )
+                if (ev.fotoUri != null) {
+                    AsyncImage(
+                        model = ev.fotoUri,
+                        contentDescription = ev.descripcion,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
+                }
+                Text(ev.descripcion, modifier = Modifier.weight(1f))
                 TextButton(onClick = { onEvidenceRemoved(ev) }) { Text("Remove") }
             }
         }

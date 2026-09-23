@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.udistrital.detectiveapp.CaseStatus
 import com.udistrital.detectiveapp.model.Case
 import com.udistrital.detectiveapp.model.CasesDemo
 import com.udistrital.detectiveapp.model.Evidence
@@ -179,10 +180,10 @@ fun StatusBadge(text: String) {
     }
 }
 
-fun statusColor(status: String): Color = when (status.trim().lowercase()) {
-    "open", "abierto" -> Color(0xFF6FA8DC)
-    "in progress", "en progreso" -> Amber
-    "closed", "cerrado" -> Color(0xFF7CB88F)
+fun statusColor(status: String): Color = when (CaseStatus.normalize(status)) {
+    CaseStatus.OPEN -> Color(0xFF6FA8DC)
+    CaseStatus.INVESTIGATING -> Amber
+    CaseStatus.CLOSED -> Color(0xFF7CB88F)
     else -> SecondaryText
 }
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.udistrital.detectiveapp.CaseStatus
 import com.udistrital.detectiveapp.repository.CaseRepository
 import androidx.compose.material3.TextButton
 
@@ -35,9 +36,9 @@ fun HomeScreen(
     val cases = remember { CaseRepository(context).getAllCases() }
 
     val totalCases = cases.size
-    val openCases = cases.count { it.estado.trim().equals("Abierto", ignoreCase = true) }
-    val investigatingCases = cases.count { it.estado.trim().equals("En investigación", ignoreCase = true) }
-    val closedCases = cases.count { it.estado.trim().equals("Cerrado", ignoreCase = true) }
+    val openCases = cases.count { CaseStatus.normalize(it.estado) == CaseStatus.OPEN }
+    val investigatingCases = cases.count { CaseStatus.normalize(it.estado) == CaseStatus.INVESTIGATING }
+    val closedCases = cases.count { CaseStatus.normalize(it.estado) == CaseStatus.CLOSED }
 
     Scaffold { innerPadding ->
         Column(
@@ -128,9 +129,8 @@ private fun SummaryCard(title: String, value: Int, modifier: Modifier = Modifier
         }
     }
 }
-    @Preview(showBackground = true)
-    @Composable
-    fun HomeScreenPreview() {
-        HomeScreen(onViewCases = {}, onNewCase = {}, onExit = {})
-    }
-
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(onViewCases = {}, onNewCase = {}, onExit = {})
+}
