@@ -45,18 +45,6 @@ fun AppNavigation() {
             )
         }
 
-        composable(
-            route = Routes.DELETE_CASE,
-            arguments = listOf(navArgument(NavArgs.CASE_ID) { type = NavType.IntType })
-        ) { entry ->
-            val id = entry.arguments?.getInt(NavArgs.CASE_ID) ?: -1
-            DeleteCaseScreen(
-                caseId = id,
-                onBack = { navController.popBackStack() },
-                onDeleted = { navController.popBackStack() }
-            )
-        }
-
         composable(Routes.CREATE_CASE) {
             CreateCaseScreen(
                 onSaveClick = { newCase ->
@@ -90,7 +78,20 @@ fun AppNavigation() {
             val id = entry.arguments?.getInt(NavArgs.CASE_ID) ?: -1
             EditCaseScreen(
                 caseId = id,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onSaved = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Routes.DELETE_CASE,
+            arguments = listOf(navArgument(NavArgs.CASE_ID) { type = NavType.IntType })
+        ) { entry ->
+            val id = entry.arguments?.getInt(NavArgs.CASE_ID) ?: -1
+            DeleteCaseScreen(
+                caseId = id,
+                onBack = { navController.popBackStack() },
+                onDeleted = { navController.popBackStack() }
             )
         }
     }
